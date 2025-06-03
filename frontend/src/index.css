@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Map container styling */
+#map {
+  height: 18rem; /* Tailwind h-72 */
+  border-radius: 0.5rem; /* Tailwind rounded */
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Correct location marker */
+.correct-location-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Optional scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  border-radius: 4px;
+}
+
+/* Leaflet attribution in dark mode */
+.dark .leaflet-control-attribution {
+  background-color: #1f2937 !important; /* Tailwind zinc-800 */
+  color: #d1d5db !important; /* Tailwind gray-300 */
+}
+
+/* Leaflet container z-index fix */
+.leaflet-container {
+  z-index: 0;
+}
+
+/* Prevent marker icon overlap on submit */
+.leaflet-pane > .leaflet-marker-icon {
+  z-index: 500;
+}
