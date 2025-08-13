@@ -26,7 +26,7 @@ async def startup_event():
         # Network debugging info
         port = int(os.getenv("PORT", 8000))
         logger.info(f"🌐 Server will listen on port {port}")
-        logger.info(f"🔗 Health check endpoint: /health")
+        logger.info(f"🔗 Health check endpoint: /startup")
         
         logger.info("✅ Startup complete!")
         

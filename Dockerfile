@@ -30,12 +30,12 @@ COPY backend/ .
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-# Expose port
+# Expose port (Railway will set PORT environment variable)
 EXPOSE 8000
 
 # Health check - use startup endpoint for immediate response
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8000/startup || exit 1
 
-# Start command
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start command (Railway will override PORT)
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
