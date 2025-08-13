@@ -242,7 +242,13 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
                 return {"error": f"City selection failed: {str(e)}", "raw_response": "City selection error"}
 
         # Build system prompt with pre-selected city
-        system_prompt = _build_system_prompt(difficulty, selected_city)
+        print(f"🔧 Building system prompt for city: {selected_city.name}")
+        try:
+            system_prompt = _build_system_prompt(difficulty, selected_city)
+            print(f"✅ System prompt built successfully")
+        except Exception as e:
+            print(f"❌ Error building system prompt: {e}")
+            return {"error": f"System prompt build failed: {str(e)}", "raw_response": "System prompt error"}
 
         # Warm-up call: tiny generation to prime caches
         if warmup:
@@ -260,31 +266,39 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
             return {"status": "warmed"}
 
         # Memoization key - ensure all values are strings to avoid hash issues
-        if city and country and continent:
-            cache_key = (
-                str(difficulty or ""),
-                str(seed or ""),
-                str(region_hint or ""),
-                str(theme or ""),
-                str(city or ""),
-                str(country or ""),
-                str(continent or ""),
-                str(lat or ""),
-                str(lon or "")
-            )
-        else:
-            cache_key = (
-                str(difficulty or ""),
-                str(seed or ""),
-                str(region_hint or ""),
-                str(theme or ""),
-                str(selected_city.name or "")
-            )
-        
-        # Convert tuple to string for cache key to avoid hash issues
-        cache_key_str = str(cache_key)
-        if cache_key_str in _persona_cache:
-            return _persona_cache[cache_key_str]
+        print(f"🔧 Building cache key...")
+        try:
+            if city and country and continent:
+                cache_key = (
+                    str(difficulty or ""),
+                    str(seed or ""),
+                    str(region_hint or ""),
+                    str(theme or ""),
+                    str(city or ""),
+                    str(country or ""),
+                    str(continent or ""),
+                    str(lat or ""),
+                    str(lon or "")
+                )
+            else:
+                cache_key = (
+                    str(difficulty or ""),
+                    str(seed or ""),
+                    str(region_hint or ""),
+                    str(theme or ""),
+                    str(selected_city.name or "")
+                )
+            
+            # Convert tuple to string for cache key to avoid hash issues
+            cache_key_str = str(cache_key)
+            print(f"✅ Cache key built: {cache_key_str[:50]}...")
+            
+            if cache_key_str in _persona_cache:
+                print(f"🎯 Cache hit! Returning cached result")
+                return _persona_cache[cache_key_str]
+        except Exception as e:
+            print(f"❌ Error building cache key: {e}")
+            return {"error": f"Cache key build failed: {str(e)}", "raw_response": "Cache key error"}
 
         # Build small diversity delta - ensure all values are strings
         recent_names_list = []
