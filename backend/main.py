@@ -20,6 +20,8 @@ async def startup_event():
         logger.info("🚀 GeoPersona API starting up...")
         logger.info(f"🌍 Environment: {os.getenv('RAILWAY_ENVIRONMENT', 'development')}")
         logger.info(f"🔑 API Key configured: {'Yes' if os.getenv('OPENAI_API_KEY') else 'No'}")
+        logger.info(f"🏗️ Build ID: {os.getenv('RAILWAY_BUILD_ID', 'local')}")
+        logger.info(f"🚂 Service: {os.getenv('RAILWAY_SERVICE_NAME', 'unknown')}")
         
         # Test city engine loading
         city_count = sum(city_engine.get_difficulty_stats().values())
@@ -42,9 +44,9 @@ async def startup_event():
         except Exception as e:
             logger.warning(f"⚠️ Port binding test failed: {str(e)}")
         
-        # Add a small delay to ensure everything is ready
+        # Add a longer delay to ensure everything is ready for Railway
         import asyncio
-        await asyncio.sleep(1)
+        await asyncio.sleep(3)
         logger.info("⏰ Startup delay completed - app is ready for requests")
             
     except Exception as e:
@@ -169,6 +171,11 @@ async def ready():
             "message": f"Health check failed: {str(e)}",
             "timestamp": time.time()
         }
+
+@app.get("/health")
+async def health():
+    """Simple health check endpoint that responds immediately."""
+    return {"status": "healthy", "timestamp": time.time()}
 
 @app.get("/env")
 async def environment_check():
