@@ -42,13 +42,13 @@ vercel
 After deploying to Vercel, set these environment variables in your Vercel project:
 
 ```bash
-VITE_API_BASE_URL=https://your-railway-app.railway.app
+VITE_API_BASE_URL=https://your-railway-app-name.up.railway.app
 ```
 
 **To find your Railway URL:**
 1. Go to your Railway dashboard
 2. Click on your GeoPersona service
-3. Copy the generated domain (e.g., `https://geopersona-production-1234.up.railway.app`)
+3. Copy the generated domain (e.g., `https://your-app-name.up.railway.app`)
 
 ### 3. Update Railway CORS
 
@@ -73,6 +73,8 @@ VITE_API_BASE_URL=http://localhost:8000
 - `PYTHON_VERSION`: 3.11
 - `ALLOWED_ORIGINS`: Comma-separated list of allowed origins
 - `PORT`: Automatically set by Railway (8080)
+- `RATE_LIMIT_PER_MIN`: 5 (1 game per minute per IP)
+- `RATE_LIMIT_PER_DAY`: 25 (5 games per day per IP)
 
 ## 🧪 Testing
 
@@ -117,9 +119,9 @@ npm run dev
 ## 📱 Final URLs
 
 After deployment, you'll have:
-- **Backend API**: `https://your-railway-app.railway.app`
+- **Backend API**: `https://your-railway-app-name.up.railway.app`
 - **Frontend App**: `https://your-vercel-domain.vercel.app`
-- **API Documentation**: `https://your-railway-app.railway.app/docs`
+- **API Documentation**: `https://your-railway-app-name.up.railway.app/docs`
 
 ## 🎯 Next Steps
 
@@ -129,9 +131,22 @@ After deployment, you'll have:
 4. ✅ Test end-to-end functionality
 5. 🎉 Share your live GeoPersona game!
 
+## 🔧 Recent Fixes Applied
+
+### **Airport Code Accuracy**
+- ✅ Fixed Berlin airport codes (now uses BER instead of outdated TXL)
+- ✅ LLM now uses pre-generated airport codes from database
+- ✅ No more fake airport codes like "JOR" for Lima
+- ✅ All airport codes are verified and current
+
+### **Rate Limiting**
+- ✅ Updated to 5 API calls per minute (1 game per minute)
+- ✅ Maintained 25 API calls per day (5 games per day)
+- ✅ Prevents API abuse while allowing reasonable gameplay
+
 ## 🔗 Useful Links
 
 - [Railway Dashboard](https://railway.app/dashboard)
 - [Vercel Dashboard](https://vercel.com/dashboard)
-- [GeoPersona Backend API](https://your-railway-app.railway.app)
-- [GeoPersona Frontend](https://your-vercel-domain.vercel.app)
+- [Railway Documentation](https://docs.railway.app/)
+- [Vercel Documentation](https://vercel.com/docs)

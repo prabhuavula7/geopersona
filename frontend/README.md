@@ -359,15 +359,45 @@ This frontend application is part of the GeoPersona project and follows the same
 
 ## 🤝 **Contributing**
 
-1. **Fork** the repository
-2. **Create** a feature branch
-3. **Make** your changes
-4. **Test** thoroughly on different devices
-5. **Submit** a pull request
+Since this project is under the MIT License, you're free to use, modify, and contribute to the codebase!
 
-### **Development Guidelines**
+### **How to Contribute:**
+
+1. **Fork** the repository
+2. **Clone** your fork locally
+3. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+4. **Make** your changes and test thoroughly
+5. **Commit** with clear messages: `git commit -m "Add amazing feature"`
+6. **Push** to your branch: `git push origin feature/amazing-feature`
+7. **Submit** a pull request
+
+### **Development Setup:**
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/geopersona.git
+cd geopersona/frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+### **What We're Looking For:**
+- 🐛 Bug fixes and improvements
+- ✨ New features and enhancements
+- 📚 Documentation improvements
+- 🧪 Additional test coverage
+- 🎨 UI/UX improvements
+- 📱 Mobile optimizations
+
+### **Code Standards:**
 - Follow React best practices
 - Maintain responsive design principles
 - Ensure accessibility compliance
 - Write clear component documentation
 - Test across different browsers and devices
+- Use modern JavaScript/React patterns
+
+**Your contributions help make GeoPersona better for everyone!** 🌟

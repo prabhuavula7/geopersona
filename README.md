@@ -97,6 +97,7 @@ npm run dev
 - **Claude 3.5 Sonnet**: Advanced AI for realistic character creation
 - **Difficulty-Specific Clues**: Clues adapt to selected difficulty level
 - **Location-Accurate Hints**: Real landmarks, airport codes, and cultural details
+- **Database Integration**: Uses pre-generated airport codes and landmarks (no fake data)
 - **Anti-Cheating**: No city names or obvious location reveals
 
 ### **Scoring System**
@@ -177,7 +178,7 @@ npm run build
 3. Set environment variables:
    - `OPENAI_API_KEY`: Your OpenRouter API key
    - `ALLOWED_ORIGINS`: Your frontend domain
-   - `RATE_LIMIT_PER_MIN`: 25 (5 games per minute per IP)
+   - `RATE_LIMIT_PER_MIN`: 5 (1 game per minute per IP)
    - `RATE_LIMIT_PER_DAY`: 25 (5 games per day per IP)
 
 ### **Docker Support**
@@ -192,11 +193,51 @@ docker run -p 8000:8000 -e OPENAI_API_KEY=your_key geopersona-backend
 
 ## 📝 **Contributing**
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+Since this project is under the MIT License, you're free to use, modify, and contribute to the codebase!
+
+### **How to Contribute:**
+
+1. **Fork** the repository
+2. **Clone** your fork locally
+3. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+4. **Make** your changes and test thoroughly
+5. **Commit** with clear messages: `git commit -m "Add amazing feature"`
+6. **Push** to your branch: `git push origin feature/amazing-feature`
+7. **Submit** a pull request
+
+### **Development Setup:**
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/geopersona.git
+cd geopersona
+
+# Set up backend
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Set up frontend
+cd ../frontend
+npm install
+npm run dev
+```
+
+### **What We're Looking For:**
+- 🐛 Bug fixes and improvements
+- ✨ New features and enhancements
+- 📚 Documentation improvements
+- 🧪 Additional test coverage
+- 🌍 New cities and cultural data
+- 🎨 UI/UX improvements
+
+### **Code Standards:**
+- Follow existing code style and patterns
+- Add tests for new functionality
+- Update documentation as needed
+- Ensure all tests pass before submitting
+
+**Your contributions help make GeoPersona better for everyone!** 🌟
 
 ---
 

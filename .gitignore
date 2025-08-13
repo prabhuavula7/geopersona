@@ -11,6 +11,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Python virtual environments
+venv/
 backend/venv/
 frontend/node_modules/
 
@@ -32,6 +33,12 @@ build/
 *.swp
 *.swo
 *~
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
 
 # OS generated files
 .DS_Store
