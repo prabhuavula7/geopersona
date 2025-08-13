@@ -16,8 +16,8 @@ Your backend is successfully deployed on Railway! 🎉
 # Install Vercel CLI
 npm install -g vercel
 
-# Navigate to frontend directory (where vercel.json is located)
-cd frontend
+# Navigate to root directory (where vercel.json is located)
+cd /path/to/geopersona
 
 # Deploy
 vercel
@@ -25,16 +25,16 @@ vercel
 # Follow the prompts:
 # - Link to existing project or create new
 # - Set project name (e.g., geopersona-frontend)
-# - Vercel will automatically use the frontend/vercel.json configuration
+# - Vercel will automatically use the root vercel.json configuration
 ```
 
 #### Option B: Vercel Dashboard
 1. Go to [vercel.com](https://vercel.com)
 2. Click "New Project"
-3. **Important**: Import your GitHub repository and select the `frontend` folder
+3. **Important**: Import your GitHub repository (select the entire repository, not just frontend folder)
 4. **Build settings are pre-configured**:
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
+   - Build Command: `cd frontend && npm install && npm run build`
+   - Output Directory: `frontend/dist`
    - Framework: Vite
 
 ### 2. Configure Environment Variables

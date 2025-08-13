@@ -1,0 +1,40 @@
+# Backend files (not needed for frontend deployment)
+backend/
+*.py
+*.pyc
+__pycache__/
+venv/
+env/
+
+# Docker files
+Dockerfile*
+.dockerignore
+
+# Railway config
+railway.json
+
+# Git files
+.git/
+.gitignore
+
+# Environment files
+.env*
+.env.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test files
+test_docker.sh
