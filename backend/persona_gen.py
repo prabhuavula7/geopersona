@@ -301,17 +301,25 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
             return {"error": f"Cache key build failed: {str(e)}", "raw_response": "Cache key error"}
 
         # Build small diversity delta - ensure all values are strings
-        recent_names_list = []
-        for name in _recent_names:
-            if isinstance(name, str) and name.strip():
-                recent_names_list.append(name.strip())
-        recent_names_list = list(dict.fromkeys(recent_names_list))[:5]
-        
-        job_counts = Counter()
-        for job in _recent_jobs:
-            if isinstance(job, str) and job.strip():
-                job_counts[job.strip().lower()] += 1
-        avoid_jobs = [job for job, cnt in job_counts.most_common() if cnt >= 2][:3]
+        print(f"🔧 Building diversity delta...")
+        try:
+            recent_names_list = []
+            for name in _recent_names:
+                if isinstance(name, str) and name.strip():
+                    recent_names_list.append(name.strip())
+            recent_names_list = list(dict.fromkeys(recent_names_list))[:5]
+            print(f"✅ Recent names processed: {recent_names_list}")
+            
+            job_counts = Counter()
+            for job in _recent_jobs:
+                if isinstance(job, str) and job.strip():
+                    job_counts[job.strip().lower()] += 1
+            avoid_jobs = [job for job, cnt in job_counts.most_common() if cnt >= 2][:3]
+            print(f"✅ Job counts processed: {dict(job_counts)}")
+            print(f"✅ Avoid jobs: {avoid_jobs}")
+        except Exception as e:
+            print(f"❌ Error building diversity delta: {e}")
+            return {"error": f"Diversity delta build failed: {str(e)}", "raw_response": "Diversity delta error"}
 
         diversity_note = {
             "avoid_names": recent_names_list,
@@ -329,21 +337,27 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
             "content": f"city_context: {json.dumps({{'name': selected_city.name, 'country': selected_city.country, 'continent': selected_city.continent, 'region': selected_city.region, 'airport_codes': selected_city.airport_codes, 'landmarks': selected_city.landmarks, 'population': selected_city.population, 'is_capital': selected_city.is_capital, 'city_rank': selected_city.city_rank}}, separators=(',', ':'))}"
         }
 
-        response = client.chat.completions.create(
-            model="anthropic/claude-3.5-sonnet-20240620",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                city_context,
-                diversity_msg,
-                _build_user_delta(seed, region_hint, theme),
-            ],
-            max_tokens=420,
-            temperature=0.5,
-            top_p=0.9,
-            presence_penalty=0.6,
-            frequency_penalty=0.4,
-            response_format={"type": "json_object"},
-        )
+        print(f"🔧 Making OpenAI API call...")
+        try:
+            response = client.chat.completions.create(
+                model="anthropic/claude-3.5-sonnet-20240620",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    city_context,
+                    diversity_msg,
+                    _build_user_delta(seed, region_hint, theme),
+                ],
+                max_tokens=420,
+                temperature=0.5,
+                top_p=0.9,
+                presence_penalty=0.6,
+                frequency_penalty=0.4,
+                response_format={"type": "json_object"},
+            )
+            print(f"✅ OpenAI API call successful")
+        except Exception as e:
+            print(f"❌ Error in OpenAI API call: {e}")
+            return {"error": f"OpenAI API call failed: {str(e)}", "raw_response": "API call error"}
 
         raw = response.choices[0].message.content.strip()
         print("🟢 Raw response received")
