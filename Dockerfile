@@ -1,17 +1,15 @@
-# Use Python 3.11 slim image for smaller size
-# More specific tag for better reliability
+# Use Python 3.11 slim image
 FROM python:3.11.9-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    PIP_NO_CACHE_DIR=1
 
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies with retry logic
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
@@ -32,12 +30,12 @@ COPY backend/ .
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-# Expose port (Railway will set PORT environment variable)
+# Expose port
 EXPOSE 8000
 
-# Health check - simplified for Railway network issues
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8000/startup || exit 1
+    CMD curl -f http://localhost:8000/ready || exit 1
 
-# Start command (Railway will override PORT)
+# Start command
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -20,7 +20,6 @@ async def startup_event():
         logger.info("🚀 GeoPersona API starting up...")
         logger.info(f"🌍 Environment: {os.getenv('RAILWAY_ENVIRONMENT', 'development')}")
         logger.info(f"🔑 API Key configured: {'Yes' if os.getenv('OPENAI_API_KEY') else 'No'}")
-        logger.info(f"🌐 CORS origins: {allowed_origins}")
         
         # Test city engine loading
         city_count = sum(city_engine.get_difficulty_stats().values())
@@ -29,8 +28,7 @@ async def startup_event():
         # Network debugging info
         port = int(os.getenv("PORT", 8000))
         logger.info(f"🌐 Server will listen on port {port}")
-        logger.info(f"🔗 Health check endpoint: /ping")
-        logger.info(f"📡 CORS origins: {allowed_origins}")
+        logger.info(f"🔗 Health check endpoint: /ready")
         
         logger.info("✅ Startup complete!")
         
@@ -156,7 +154,21 @@ async def ping():
 @app.get("/ready")
 async def ready():
     """Readiness endpoint for Railway health checks."""
-    return {"status": "ready", "message": "API is ready to serve requests", "timestamp": time.time()}
+    try:
+        # Basic health check - ensure city engine is working
+        city_count = sum(city_engine.get_difficulty_stats().values())
+        return {
+            "status": "ready", 
+            "message": "API is ready to serve requests", 
+            "timestamp": time.time(),
+            "cities_loaded": city_count
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Health check failed: {str(e)}",
+            "timestamp": time.time()
+        }
 
 @app.get("/env")
 async def environment_check():
