@@ -180,7 +180,7 @@ def _build_system_prompt(difficulty: str, selected_city: City) -> str:
 
 
 # Simple in-memory memo cache
-_persona_cache: dict[tuple, dict] = {}
+_persona_cache: dict[str, dict] = {}
 _CACHE_MAX = 200
 
 # Recent history for diversity constraints
@@ -286,9 +286,17 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
         if cache_key_str in _persona_cache:
             return _persona_cache[cache_key_str]
 
-        # Build small diversity delta
-        recent_names_list = list(dict.fromkeys(list(_recent_names)))[:5]
-        job_counts = Counter(list(_recent_jobs))
+        # Build small diversity delta - ensure all values are strings
+        recent_names_list = []
+        for name in _recent_names:
+            if isinstance(name, str) and name.strip():
+                recent_names_list.append(name.strip())
+        recent_names_list = list(dict.fromkeys(recent_names_list))[:5]
+        
+        job_counts = Counter()
+        for job in _recent_jobs:
+            if isinstance(job, str) and job.strip():
+                job_counts[job.strip().lower()] += 1
         avoid_jobs = [job for job, cnt in job_counts.most_common() if cnt >= 2][:3]
 
         diversity_note = {
