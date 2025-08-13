@@ -344,9 +344,20 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
         }
 
         # Add city context to help AI generate accurate clues
+        city_context_data = {
+            'name': selected_city.name,
+            'country': selected_city.country,
+            'continent': selected_city.continent,
+            'region': selected_city.region,
+            'airport_codes': selected_city.airport_codes,
+            'landmarks': selected_city.landmarks,
+            'population': selected_city.population,
+            'is_capital': selected_city.is_capital,
+            'city_rank': selected_city.city_rank
+        }
         city_context = {
             "role": "system",
-            "content": f"city_context: {json.dumps({{'name': selected_city.name, 'country': selected_city.country, 'continent': selected_city.continent, 'region': selected_city.region, 'airport_codes': selected_city.airport_codes, 'landmarks': selected_city.landmarks, 'population': selected_city.population, 'is_capital': selected_city.is_capital, 'city_rank': selected_city.city_rank}}, separators=(',', ':'))}"
+            "content": f"city_context: {json.dumps(city_context_data, separators=(',', ':'))}"
         }
 
         print(f"🔧 Making OpenAI API call...")
