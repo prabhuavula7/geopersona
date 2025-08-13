@@ -109,7 +109,6 @@ export default function App() {
   const generatePersonaForCity = async (city) => {
     try {
       setLoadingMessage("🧠 Crafting persona for your next challenge...");
-      console.log("Generating persona for next city");
       
       const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
       const seed = `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
@@ -124,11 +123,6 @@ export default function App() {
       params.set('lat', city.lat.toString());
       params.set('lon', city.lon.toString());
       const url = `${backendUrl}/api/generate_persona?${params.toString()}`;
-      
-      console.log("🔍 Debug - URL being called:", url);
-      console.log("🔍 Debug - Seed value:", seed);
-      console.log("🔍 Debug - Theme value:", theme);
-      console.log("🔍 Debug - Params object:", Object.fromEntries(params));
       
       console.log("Calling persona API");
       const res = await fetch(url);
@@ -233,7 +227,6 @@ export default function App() {
       
       // Generate persona for first city
       const firstCity = cities[0];
-      console.log("First city selected");
       
       if (firstCity) {
         const success = await generatePersonaForCity(firstCity);
@@ -318,7 +311,6 @@ export default function App() {
       const nextCity = gameCities[nextRoundNum - 1];
       
       if (nextCity) {
-        console.log("🎯 Preparing next round");
         await generatePersonaForCity(nextCity);
         setRound(nextRoundNum);
       } else {
