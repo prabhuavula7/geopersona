@@ -399,7 +399,7 @@
       "city_rank": 1,
       "lat": 52.5200,
       "lon": 13.4050,
-      "airport_codes": ["BER", "TXL"],
+      "airport_codes": ["BER"],
       "landmarks": ["Brandenburg Gate", "Berlin Wall", "Reichstag"],
       "region": "Berlin"
     },

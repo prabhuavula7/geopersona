@@ -55,7 +55,7 @@ routine: 2-4 sentences, first person, natural daily life story including:
 - Evening/weekend activities
 
 socialSnippets: EXACTLY 4 clues, each 12-20 words, from these categories:
-- food: Regional cuisine, cooking methods, meal timing, local ingredients
+- food: Regional cuisine, cooking methods, meal timing, local ingredients. AVOID foods that strongly associate with other countries (e.g., don't mention döner kebab for Berlin as it points to Turkey)
 - music: Local music styles, street performances, cultural preferences
 - habits: Daily routines, social customs, weekend activities, local behaviors
 - media: Entertainment preferences, commute habits, cultural consumption
