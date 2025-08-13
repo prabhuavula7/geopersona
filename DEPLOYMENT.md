@@ -1,226 +1,139 @@
-# 🚀 Deployment Guide for Railway + Vercel
+# 🚀 GeoPersona Deployment Guide
 
-## 📋 **Prerequisites**
-1. **GitHub repository** with your code pushed
-2. **OpenRouter API key** for Claude 3.5 Sonnet
-3. **Railway account** (railway.app)
-4. **Vercel account** (vercel.com)
+## ✅ Backend (Railway) - COMPLETED
+Your backend is successfully deployed on Railway! 🎉
 
----
+**Current Status**: ✅ Deployed and running
+**Health Checks**: ✅ Passing
+**Port**: 8080 (Railway managed)
 
-## 🚂 **Backend Deployment (Railway)**
+## 🌐 Frontend (Vercel) - Next Steps
 
-### **1. Connect to Railway**
-1. Go to [railway.app](https://railway.app)
-2. Click "New Project"
-3. Select "Deploy from GitHub repo"
-4. Choose your `geopersona` repository
-5. **Important**: Select the **entire repository** (not just backend folder)
-6. Railway will automatically detect and use the root Dockerfile
+### 1. Deploy to Vercel
 
-### **2. Set Environment Variables**
-In Railway dashboard, add these environment variables:
-
+#### Option A: Vercel CLI (Recommended)
 ```bash
-# Required: Your OpenRouter API key
-OPENAI_API_KEY=your_actual_openrouter_api_key
+# Install Vercel CLI
+npm install -g vercel
 
-# CORS origins for Vercel frontend (update with your actual domain)
-ALLOWED_ORIGINS=https://your-app.vercel.app
+# Navigate to frontend directory
+cd frontend
 
-# Rate limiting (5 games per day per IP)
-RATE_LIMIT_PER_MIN=25
-RATE_LIMIT_PER_DAY=25
+# Deploy
+vercel
+
+# Follow the prompts:
+# - Link to existing project or create new
+# - Set project name (e.g., geopersona-frontend)
+# - Set build command: npm run build
+# - Set output directory: dist
 ```
 
-### **3. Deploy**
-1. Railway will automatically build and deploy
-2. Wait for deployment to complete
-3. Copy your Railway URL (e.g., `https://geopersona-backend.railway.app`)
-
----
-
-## 🌐 **Frontend Deployment (Vercel)**
-
-### **1. Connect to Vercel**
+#### Option B: Vercel Dashboard
 1. Go to [vercel.com](https://vercel.com)
 2. Click "New Project"
-3. Import your `geopersona` repository
-4. Select the `frontend` folder
+3. Import your GitHub repository
+4. Set build settings:
+   - Framework Preset: Vite
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Install Command: `npm install`
 
-### **2. Configure Build Settings**
-- **Framework Preset**: Vite
-- **Build Command**: `npm run build`
-- **Output Directory**: `dist`
-- **Install Command**: `npm install`
+### 2. Configure Environment Variables
 
-### **3. Set Environment Variables**
-Add this environment variable:
+After deploying to Vercel, set these environment variables in your Vercel project:
 
 ```bash
-# Your Railway backend URL
-VITE_API_BASE_URL=https://your-railway-backend-url.railway.app
+VITE_API_BASE_URL=https://your-railway-app.railway.app
 ```
 
-### **4. Deploy**
-1. Click "Deploy"
-2. Wait for build and deployment
-3. Get your Vercel URL (e.g., `https://geopersona.vercel.app`)
+**To find your Railway URL:**
+1. Go to your Railway dashboard
+2. Click on your GeoPersona service
+3. Copy the generated domain (e.g., `https://geopersona-production-1234.up.railway.app`)
 
----
+### 3. Update Railway CORS
 
-## 🔗 **Connect Frontend to Backend**
+Once you have your Vercel domain, update the `ALLOWED_ORIGINS` in Railway:
 
-### **1. Update CORS in Railway**
-Go back to Railway and update:
+1. Go to Railway dashboard → Your service → Variables
+2. Update `ALLOWED_ORIGINS`:
+   ```
+   http://localhost:5173,https://your-vercel-domain.vercel.app
+   ```
+3. Redeploy the backend
+
+## 🔧 Configuration Files
+
+### Frontend Environment Variables
+Create `.env.local` in frontend directory for local development:
 ```bash
-ALLOWED_ORIGINS=https://your-vercel-app.vercel.app
+VITE_API_BASE_URL=http://localhost:8000
 ```
 
-### **2. Test the Connection**
-1. Visit your Vercel app
-2. Try to start a game
-3. Check browser console for any CORS errors
+### Backend Environment Variables (Railway)
+- `PYTHON_VERSION`: 3.11
+- `ALLOWED_ORIGINS`: Comma-separated list of allowed origins
+- `PORT`: Automatically set by Railway (8080)
 
----
+## 🧪 Testing
 
-## 🐳 **Docker Configuration**
-
-### **Backend Dockerfile**
-- **Base Image**: Python 3.11 slim for optimal size
-- **Security**: Non-root user for production safety
-- **Health Checks**: Built-in health monitoring
-- **Port Handling**: Automatically uses Railway's PORT environment variable
-
-### **Build Process**
+### Local Development
 ```bash
-# Local testing
+# Backend
 cd backend
-docker build -t geopersona-backend .
-docker run -p 8000:8000 -e OPENAI_API_KEY=your_key geopersona-backend
+python -m uvicorn main:app --reload --port 8000
 
-# Railway automatically handles this
+# Frontend
+cd frontend
+npm run dev
 ```
 
----
+### Production Testing
+1. Test backend endpoints: `https://your-railway-app.railway.app/startup`
+2. Test frontend: `https://your-vercel-domain.vercel.app`
+3. Verify API calls work between frontend and backend
 
-## 📊 **Rate Limiting Explained**
+## 🚨 Troubleshooting
 
-### **Current Limits:**
-- **Per IP Address**: 5 games per day
-- **Per Minute**: 5 API calls 
-- **Per Day**: 25 API calls (5 games × 5 rounds)
+### Common Issues
 
-### **What This Means:**
-- **Each user** can play 5 complete games per day
-- **Multiple users** from different IPs can play simultaneously
-- **Scalable** to hundreds of users
+1. **CORS Errors**
+   - Ensure `ALLOWED_ORIGINS` includes your Vercel domain
+   - Check that the domain is exactly correct (including https://)
 
----
+2. **API Connection Failures**
+   - Verify `VITE_API_BASE_URL` is set correctly in Vercel
+   - Check that Railway backend is running and healthy
 
-## 🧪 **Testing Deployment**
+3. **Build Failures**
+   - Ensure all dependencies are in package.json
+   - Check that build command works locally: `npm run build`
 
-### **1. Health Check**
-```bash
-curl https://your-railway-backend.railway.app/
-```
+### Health Check Endpoints
+- `/startup`: Simple health check (Railway uses this)
+- `/health`: Basic health status
+- `/ready`: Comprehensive health check
+- `/ping`: Network test endpoint
 
-### **2. Test Rate Limiting**
-```bash
-# Make multiple requests to see rate limiting in action
-curl https://your-railway-backend.railway.app/api/game/cities/beginner
-```
+## 📱 Final URLs
 
-### **3. Test Frontend**
-- Visit your Vercel app
-- Play a few games
-- Check if rate limiting works
+After deployment, you'll have:
+- **Backend API**: `https://your-railway-app.railway.app`
+- **Frontend App**: `https://your-vercel-domain.vercel.app`
+- **API Documentation**: `https://your-railway-app.railway.app/docs`
 
----
+## 🎯 Next Steps
 
-## 🔧 **Troubleshooting**
+1. ✅ Deploy frontend to Vercel
+2. ✅ Configure environment variables
+3. ✅ Update Railway CORS settings
+4. ✅ Test end-to-end functionality
+5. 🎉 Share your live GeoPersona game!
 
-### **Common Issues:**
+## 🔗 Useful Links
 
-**CORS Errors:**
-- Check `ALLOWED_ORIGINS` in Railway
-- Ensure frontend URL is correct
-
-**Rate Limiting Not Working:**
-- Check environment variables in Railway
-- Restart Railway service
-
-**API Key Errors:**
-- Verify `OPENAI_API_KEY` in Railway
-- Check OpenRouter dashboard
-
-**Build Failures:**
-- Check Railway logs
-- Verify Python version compatibility
-- **Docker Registry Issues**: If you get "context canceled" errors:
-  - Try using the alternative `Dockerfile.alpine` 
-  - Change `dockerfilePath` in `railway.json` to `"Dockerfile.alpine"`
-  - Alpine images are often more reliable for Railway
-- **File Not Found Errors**: If you get "requirements.txt not found":
-  - Ensure you're deploying the **entire repository** (not just backend folder)
-  - The root Dockerfile expects to copy from `backend/` subdirectory
-
----
-
-## 📈 **Scaling**
-
-### **Railway Auto-Scaling:**
-- Automatically handles traffic spikes
-- Multiple instances for high load
-- Global CDN for fast responses
-
-### **Vercel Auto-Scaling:**
-- Handles thousands of frontend users
-- Global edge network
-- Automatic scaling
-
----
-
-## 💰 **Costs**
-
-### **Railway:**
-- **Free tier**: $5/month credit
-- **Pay-as-you-go**: After free tier
-- **Estimated cost**: $5-15/month for moderate usage
-
-### **Vercel:**
-- **Free tier**: Unlimited projects
-- **Pro plan**: $20/month for advanced features
-- **Estimated cost**: $0/month for basic usage
-
----
-
-## 🔒 **Security Notes**
-
-### **Rate Limiting:**
-- IP-based (not user-based)
-- Shared IPs share limits
-- Consider session-based for future
-
-### **API Keys:**
-- Never commit to GitHub
-- Use Railway environment variables
-- Rotate keys regularly
-
----
-
-## 🎯 **Next Steps**
-
-1. **Monitor usage** in Railway dashboard
-2. **Set up alerts** for high usage
-3. **Consider Redis** for better rate limiting
-4. **Add user accounts** for premium features
-5. **Implement analytics** for user behavior
-
----
-
-## 📞 **Support**
-
-- **Railway**: [docs.railway.app](https://docs.railway.app)
-- **Vercel**: [vercel.com/docs](https://vercel.com/docs)
-- **OpenRouter**: [openrouter.ai/docs](https://openrouter.ai/docs)
+- [Railway Dashboard](https://railway.app/dashboard)
+- [Vercel Dashboard](https://vercel.com/dashboard)
+- [GeoPersona Backend API](https://your-railway-app.railway.app)
+- [GeoPersona Frontend](https://your-vercel-domain.vercel.app)

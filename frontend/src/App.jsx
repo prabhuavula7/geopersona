@@ -71,8 +71,8 @@ export default function App() {
     try {
       setLoadingMessage("🌍 Selecting diverse cities for your game...");
       
-      // Use full backend URL to avoid proxy issues
-      const backendUrl = 'http://localhost:8000';
+      // Use environment variable or fallback to localhost for development
+      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
       const seed = `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
       const url = `${backendUrl}/api/game/cities/${difficulty}?count=5&seed=${seed}`;
       
@@ -111,7 +111,7 @@ export default function App() {
       setLoadingMessage("🧠 Crafting persona for your next challenge...");
       console.log("Generating persona for next city");
       
-      const backendUrl = 'http://localhost:8000';
+      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
       const seed = `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
       const params = new URLSearchParams();
       if (difficulty) params.set('difficulty', difficulty);
