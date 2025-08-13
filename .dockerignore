@@ -1,0 +1,30 @@
+# Exclude everything except backend
+frontend/
+node_modules/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env*
+.git/
+.gitignore
+README.md
+DEPLOYMENT.md
+deploy.sh
+railway.json
+LICENSE
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/

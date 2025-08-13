@@ -15,8 +15,8 @@
 2. Click "New Project"
 3. Select "Deploy from GitHub repo"
 4. Choose your `geopersona` repository
-5. Select the `backend` folder (not entire project)
-6. Railway will automatically detect and use the Dockerfile
+5. **Important**: Select the **entire repository** (not just backend folder)
+6. Railway will automatically detect and use the root Dockerfile
 
 ### **2. Set Environment Variables**
 In Railway dashboard, add these environment variables:
@@ -159,8 +159,11 @@ curl https://your-railway-backend.railway.app/api/game/cities/beginner
 - Verify Python version compatibility
 - **Docker Registry Issues**: If you get "context canceled" errors:
   - Try using the alternative `Dockerfile.alpine` 
-  - Change `dockerfilePath` in `railway.json` to `"backend/Dockerfile.alpine"`
+  - Change `dockerfilePath` in `railway.json` to `"Dockerfile.alpine"`
   - Alpine images are often more reliable for Railway
+- **File Not Found Errors**: If you get "requirements.txt not found":
+  - Ensure you're deploying the **entire repository** (not just backend folder)
+  - The root Dockerfile expects to copy from `backend/` subdirectory
 
 ---
 
