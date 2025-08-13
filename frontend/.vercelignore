@@ -1,24 +1,21 @@
 # Backend files (not needed for frontend deployment)
-backend/
-*.py
-*.pyc
-__pycache__/
-venv/
-env/
+../backend/
+../*.py
+../*.pyc
+../__pycache__/
+../venv/
+../env/
 
 # Docker files
-Dockerfile*
-.dockerignore
+../Dockerfile*
+../.dockerignore
 
 # Railway config
-railway.json
+../railway.json
 
 # Git files
-.git/
-.gitignore
-
-# Node modules (will be installed by Vercel)
-node_modules/
+../.git/
+../.gitignore
 
 # Environment files
 .env*
@@ -40,4 +37,4 @@ Thumbs.db
 *.swo
 
 # Test files
-test_docker.sh
+../test_docker.sh
