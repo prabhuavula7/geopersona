@@ -9,6 +9,28 @@ from city_database import city_engine  # Import city engine for monitoring
 
 app = FastAPI(title="GeoPersona API")
 
+@app.on_event("startup")
+async def startup_event():
+    """Log startup information for debugging."""
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    try:
+        logger.info("🚀 GeoPersona API starting up...")
+        logger.info(f"🌍 Environment: {os.getenv('RAILWAY_ENVIRONMENT', 'development')}")
+        logger.info(f"🔑 API Key configured: {'Yes' if os.getenv('OPENAI_API_KEY') else 'No'}")
+        logger.info(f"🌐 CORS origins: {allowed_origins}")
+        
+        # Test city engine loading
+        city_count = sum(city_engine.get_difficulty_stats().values())
+        logger.info(f"📊 Total cities loaded: {city_count}")
+        
+        logger.info("✅ Startup complete!")
+    except Exception as e:
+        logger.error(f"❌ Startup error: {str(e)}")
+        # Don't fail startup, just log the error
+
 # CORS configuration via environment variable for production safety
 # ALLOWED_ORIGINS should be a comma-separated list, e.g. "http://localhost:5173,https://yourdomain.com"
 allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
@@ -95,6 +117,11 @@ async def root():
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy", "timestamp": time.time()}
+
+@app.get("/startup")
+async def startup_test():
+    """Simple startup test endpoint."""
+    return {"status": "startup", "message": "API is starting up", "timestamp": time.time()}
 
 @app.get("/api/city_stats")
 async def get_city_stats():
@@ -346,4 +373,7 @@ if __name__ == "__main__":
     import uvicorn
     # Railway automatically sets PORT environment variable
     port = int(os.getenv("PORT", 8000))
+    print(f"🚀 Starting GeoPersona backend on port {port}")
+    print(f"🌍 Environment: {os.getenv('RAILWAY_ENVIRONMENT', 'development')}")
+    print(f"🔑 API Key configured: {'Yes' if os.getenv('OPENAI_API_KEY') else 'No'}")
     uvicorn.run(app, host="0.0.0.0", port=port)
