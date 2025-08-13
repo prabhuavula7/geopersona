@@ -157,6 +157,10 @@ curl https://your-railway-backend.railway.app/api/game/cities/beginner
 **Build Failures:**
 - Check Railway logs
 - Verify Python version compatibility
+- **Docker Registry Issues**: If you get "context canceled" errors:
+  - Try using the alternative `Dockerfile.alpine` 
+  - Change `dockerfilePath` in `railway.json` to `"backend/Dockerfile.alpine"`
+  - Alpine images are often more reliable for Railway
 
 ---
 

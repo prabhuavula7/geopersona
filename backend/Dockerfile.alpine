@@ -1,6 +1,5 @@
-# Use Python 3.11 slim image for smaller size
-# More specific tag for better reliability
-FROM python:3.11.9-slim
+# Alternative Dockerfile using Alpine Linux (more reliable for Railway)
+FROM python:3.11-alpine
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -11,13 +10,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies with retry logic
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
+# Install system dependencies (Alpine uses apk)
+RUN apk add --no-cache \
+    build-base \
     curl \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    && rm -rf /var/cache/apk/*
 
 # Copy requirements first for better caching
 COPY requirements.txt .
@@ -29,7 +26,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create non-root user for security
-RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
+RUN adduser -D -s /bin/sh appuser && chown -R appuser /app
 USER appuser
 
 # Expose port (Railway will set PORT environment variable)
