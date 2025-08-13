@@ -189,6 +189,18 @@ _recent_jobs: deque[str] = deque(maxlen=12)
 
 async def generate_persona(difficulty: str | None = None, seed: str | None = None, region_hint: str | None = None, theme: str | None = None, warmup: bool | None = None, city: str | None = None, country: str | None = None, continent: str | None = None, lat: str | None = None, lon: str | None = None):
     try:
+        # Debug: Log all received parameters
+        print(f"🔍 Received parameters:")
+        print(f"  - difficulty: {difficulty}")
+        print(f"  - seed: {seed}")
+        print(f"  - region_hint: {region_hint}")
+        print(f"  - theme: {theme}")
+        print(f"  - city: {city}")
+        print(f"  - country: {country}")
+        print(f"  - continent: {continent}")
+        print(f"  - lat: {lat}")
+        print(f"  - lon: {lon}")
+        
         if not client:
             return {"error": "OPENAI_API_KEY (OpenRouter) not configured", "raw_response": "Missing API key"}
 
