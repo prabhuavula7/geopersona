@@ -125,6 +125,11 @@ export default function App() {
       params.set('lon', city.lon.toString());
       const url = `${backendUrl}/api/generate_persona?${params.toString()}`;
       
+      console.log("🔍 Debug - URL being called:", url);
+      console.log("🔍 Debug - Seed value:", seed);
+      console.log("🔍 Debug - Theme value:", theme);
+      console.log("🔍 Debug - Params object:", Object.fromEntries(params));
+      
       console.log("Calling persona API");
       const res = await fetch(url);
       if (!res.ok) {
