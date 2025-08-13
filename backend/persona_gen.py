@@ -259,13 +259,32 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
             )
             return {"status": "warmed"}
 
-        # Memoization key
+        # Memoization key - ensure all values are strings to avoid hash issues
         if city and country and continent:
-            cache_key = (difficulty, seed or "", region_hint or "", theme or "", city, country, continent, lat or "", lon or "")
+            cache_key = (
+                str(difficulty or ""),
+                str(seed or ""),
+                str(region_hint or ""),
+                str(theme or ""),
+                str(city or ""),
+                str(country or ""),
+                str(continent or ""),
+                str(lat or ""),
+                str(lon or "")
+            )
         else:
-            cache_key = (difficulty, seed or "", region_hint or "", theme or "", selected_city.name)
-        if cache_key in _persona_cache:
-            return _persona_cache[cache_key]
+            cache_key = (
+                str(difficulty or ""),
+                str(seed or ""),
+                str(region_hint or ""),
+                str(theme or ""),
+                str(selected_city.name or "")
+            )
+        
+        # Convert tuple to string for cache key to avoid hash issues
+        cache_key_str = str(cache_key)
+        if cache_key_str in _persona_cache:
+            return _persona_cache[cache_key_str]
 
         # Build small diversity delta
         recent_names_list = list(dict.fromkeys(list(_recent_names)))[:5]
@@ -342,7 +361,7 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
         result = {"clues": clues, "answer": answer}
         if len(_persona_cache) > _CACHE_MAX:
             _persona_cache.clear()
-        _persona_cache[cache_key] = result
+        _persona_cache[cache_key_str] = result
         return result
 
     except Exception as e:
