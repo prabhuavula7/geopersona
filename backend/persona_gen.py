@@ -66,6 +66,12 @@ socialSnippets: EXACTLY 4 clues, each 12-20 words, from these categories:
 - festivals: Cultural celebrations, seasonal events, local traditions
 - airportCodes: REAL airport codes with context (only for beginner/intermediate)
 
+MANDATORY SELECTION RULES - FOLLOW EXACTLY:
+- For BEGINNER and INTERMEDIATE difficulties: You MUST include airportCodes as one of your 4 social snippets
+- For ADVANCED difficulty: You MUST NOT include airportCodes (it's forbidden)
+- You MUST choose exactly 4 social snippets total
+- FAILURE TO FOLLOW THESE RULES WILL RESULT IN INVALID OUTPUT
+
 job: Must be realistic for the chosen city and difficulty level (see difficulty-specific rules below)
 
 name: First name only, culturally appropriate for the location
@@ -118,7 +124,9 @@ MUST be a general cultural or lifestyle observation that could apply to multiple
   "funFact": string
 }
 
-CRITICAL: Select exactly 4 social clues from the socialSnippets options above. Each clue must be 12-20 words and provide genuine, location-specific insight without revealing the city name. The city has been pre-selected by the backend, so focus on generating authentic clues for the specific location. Verify all airport codes, landmarks, and state names are REAL and accurate.
+CRITICAL: Select exactly 4 social clues from the socialSnippets options above. Each clue must be 12-20 words and provide genuine, location-specific insight without revealing the city name. The city has been pre-selected by the backend, so focus on generating authentic clues for the specific location.
+
+MANDATORY: You MUST use ONLY the airport codes and landmarks provided in the city_context. DO NOT generate or invent any airport codes or landmarks. If airport codes are provided, use them exactly as given. If landmarks are provided, reference them exactly as given. This ensures accuracy and prevents fake information.
 """
 )
 
@@ -357,7 +365,7 @@ async def generate_persona(difficulty: str | None = None, seed: str | None = Non
         }
         city_context = {
             "role": "system",
-            "content": f"city_context: {json.dumps(city_context_data, separators=(',', ':'))}"
+            "content": f"city_context: {json.dumps(city_context_data, separators=(',', ':'))}\n\nCRITICAL INSTRUCTIONS - FOLLOW EXACTLY:\n1. Use ONLY these exact airport codes: {city_context_data['airport_codes']}\n2. Use ONLY these exact landmarks: {city_context_data['landmarks']}\n3. Do NOT invent or generate any other airport codes or landmarks\n4. For {difficulty} difficulty: airportCodes MUST be included in socialSnippets\n5. FAILURE TO FOLLOW THESE RULES WILL RESULT IN INVALID OUTPUT"
         }
 
         print(f"🔧 Making OpenAI API call...")
