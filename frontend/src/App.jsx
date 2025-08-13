@@ -5,6 +5,7 @@ import GameMap from "./components/GameMap.jsx";
 import GameRecap from "./components/GameRecap.jsx";
 import "./index.css";
 import { haversine, computeScore } from "./utils/geo.js";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function App() {
   // Game state
@@ -468,6 +469,9 @@ export default function App() {
             <p className="text-lg">🎯 Preparing your next challenge...</p>
           </div>
         </div>
+        
+        {/* Vercel Analytics */}
+        <Analytics />
       </div>
     );
   }
@@ -475,11 +479,15 @@ export default function App() {
   // Show entry screen
   if (!gameStarted) {
     return (
-      <EntryScreen
-        onSelectDifficulty={handleSelectDifficulty}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
+      <>
+        <EntryScreen
+          onSelectDifficulty={handleSelectDifficulty}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
+        {/* Vercel Analytics */}
+        <Analytics />
+      </>
     );
   }
 
@@ -534,6 +542,9 @@ export default function App() {
           <div className="text-xs">Built with ❤️ to learn geography</div>
         </div>
       </div>
+      
+      {/* Vercel Analytics */}
+      <Analytics />
     </div>
   );
 }
