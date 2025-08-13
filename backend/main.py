@@ -26,7 +26,24 @@ async def startup_event():
         city_count = sum(city_engine.get_difficulty_stats().values())
         logger.info(f"📊 Total cities loaded: {city_count}")
         
+        # Network debugging info
+        port = int(os.getenv("PORT", 8000))
+        logger.info(f"🌐 Server will listen on port {port}")
+        logger.info(f"🔗 Health check endpoint: /ping")
+        logger.info(f"📡 CORS origins: {allowed_origins}")
+        
         logger.info("✅ Startup complete!")
+        
+        # Test network binding
+        try:
+            import socket
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.bind(('0.0.0.0', port))
+            sock.close()
+            logger.info(f"✅ Port {port} is available for binding")
+        except Exception as e:
+            logger.warning(f"⚠️ Port binding test failed: {str(e)}")
+            
     except Exception as e:
         logger.error(f"❌ Startup error: {str(e)}")
         # Don't fail startup, just log the error
@@ -122,6 +139,23 @@ async def health_check():
 async def startup_test():
     """Simple startup test endpoint."""
     return {"status": "startup", "message": "API is starting up", "timestamp": time.time()}
+
+@app.get("/ping")
+async def ping():
+    """Simple ping endpoint for network testing."""
+    return {"status": "pong", "message": "API is responding", "timestamp": time.time()}
+
+@app.get("/env")
+async def environment_check():
+    """Environment check endpoint for debugging."""
+    return {
+        "status": "environment",
+        "port": os.getenv("PORT", "8000"),
+        "environment": os.getenv("RAILWAY_ENVIRONMENT", "development"),
+        "api_key_configured": bool(os.getenv("OPENAI_API_KEY")),
+        "cors_origins": allowed_origins,
+        "timestamp": time.time()
+    }
 
 @app.get("/api/city_stats")
 async def get_city_stats():
