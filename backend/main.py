@@ -43,6 +43,11 @@ async def startup_event():
             logger.info(f"✅ Port {port} is available for binding")
         except Exception as e:
             logger.warning(f"⚠️ Port binding test failed: {str(e)}")
+        
+        # Add a small delay to ensure everything is ready
+        import asyncio
+        await asyncio.sleep(1)
+        logger.info("⏰ Startup delay completed - app is ready for requests")
             
     except Exception as e:
         logger.error(f"❌ Startup error: {str(e)}")
@@ -119,13 +124,16 @@ async def root():
             "advanced": "Lesser-known cities and specialized locations"
         },
         "endpoints": {
+            "ping": "/ping",
+            "env": "/env",
+            "health": "/health",
+            "startup": "/startup",
             "generate_persona": "/generate_persona",
             "api_generate_persona": "/api/generate_persona",
             "city_stats": "/api/city_stats",
             "cities_by_difficulty": "/api/cities/{difficulty}",
             "search_cities": "/api/cities/search/{query}",
-            "game_cities": "/api/game/cities/{difficulty}",
-            "health": "/health"
+            "game_cities": "/api/game/cities/{difficulty}"
         },
         "total_cities": sum(city_engine.get_difficulty_stats().values())
     }
@@ -145,6 +153,11 @@ async def ping():
     """Simple ping endpoint for network testing."""
     return {"status": "pong", "message": "API is responding", "timestamp": time.time()}
 
+@app.get("/ready")
+async def ready():
+    """Readiness endpoint for Railway health checks."""
+    return {"status": "ready", "message": "API is ready to serve requests", "timestamp": time.time()}
+
 @app.get("/env")
 async def environment_check():
     """Environment check endpoint for debugging."""
@@ -156,6 +169,8 @@ async def environment_check():
         "cors_origins": allowed_origins,
         "timestamp": time.time()
     }
+
+
 
 @app.get("/api/city_stats")
 async def get_city_stats():
@@ -410,4 +425,8 @@ if __name__ == "__main__":
     print(f"🚀 Starting GeoPersona backend on port {port}")
     print(f"🌍 Environment: {os.getenv('RAILWAY_ENVIRONMENT', 'development')}")
     print(f"🔑 API Key configured: {'Yes' if os.getenv('OPENAI_API_KEY') else 'No'}")
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    print(f"🌐 Binding to 0.0.0.0:{port}")
+    print(f"🔗 Health check endpoint: http://0.0.0.0:{port}/ping")
+    
+    # Force reload=False for production
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=False, log_level="info")
