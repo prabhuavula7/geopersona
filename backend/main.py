@@ -54,8 +54,8 @@ app.add_middleware(
 
 # IP-based rate limiter for Railway deployment
 # 5 games per day per IP (each game = 5 API calls)
-requests_per_minute_limit = int(os.getenv("RATE_LIMIT_PER_MIN", "25"))  # 5 games per minute
-requests_per_day_limit = int(os.getenv("RATE_LIMIT_PER_DAY", "25"))    # 5 games per day
+requests_per_minute_limit = int(os.getenv("RATE_LIMIT_PER_MIN", "5"))  # 1 game per minute
+requests_per_day_limit = int(os.getenv("RATE_LIMIT_PER_DAY", "25"))   # 5 games per day
 
 recent_requests_by_ip: Dict[str, list] = {}
 daily_counters_by_ip: Dict[str, Dict[str, int]] = {}
