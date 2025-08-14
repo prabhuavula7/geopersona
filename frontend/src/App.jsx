@@ -196,8 +196,9 @@ export default function App() {
   // Start a new game
   const startGame = async () => {
     try {
-      // Loading is already on from handleSelectDifficulty, just update message
-      setLoadingMessage("🌍 Selecting diverse cities for your game...");
+      // Show loading screen and start the game
+      setIsLoading(true);
+      setLoadingMessage("🚀 Starting your geography adventure...");
       
       // Reset all game state
       setRound(0);
@@ -265,34 +266,20 @@ export default function App() {
 
   // Handle difficulty selection
   const handleSelectDifficulty = (selectedDifficulty) => {
+    console.log("Difficulty selected:", selectedDifficulty);
     setDifficulty(selectedDifficulty);
-    
-    // Show loading screen immediately and keep it on
-    setIsLoading(true);
-    setLoadingMessage("🚀 Starting your geography adventure...");
-    
-    // Clear any existing game state
-    setRound(0);
-    setTotalScore(0);
-    setGameOver(false);
-    setPersona(null);
-    setGuessCoords(null);
-    setScore(null);
-    setFeedback("");
-    setGameHistory([]);
-    setGameCities([]);
-    
-    // Don't set loading here - let startGame handle it
+    // Don't start the game yet - wait for user to click Start Game
   };
 
-  // Auto-start game when difficulty is set
-  useEffect(() => {
-    if (difficulty && !gameStarted) {
-      console.log("Difficulty set, auto-starting game");
-      // No delay needed since loading is already on
+  // Handle starting the game
+  const handleStartGame = () => {
+    console.log("handleStartGame called, difficulty:", difficulty);
+    if (difficulty) {
       startGame();
+    } else {
+      console.error("No difficulty selected!");
     }
-  }, [difficulty, gameStarted]);
+  };
 
   // Move to next round
   const nextRound = async () => {
@@ -482,6 +469,7 @@ export default function App() {
       <>
         <EntryScreen
           onSelectDifficulty={handleSelectDifficulty}
+          onStartGame={handleStartGame}
           theme={theme}
           onToggleTheme={toggleTheme}
         />
